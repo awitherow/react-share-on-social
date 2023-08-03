@@ -1,5 +1,5 @@
 import { IconProps } from "interfaces";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 
 import { iconList, windowFeatures } from "../config";
 
@@ -7,8 +7,8 @@ export default function Icon({ id, shareData, onClose, onClick, noReferer }: Ico
   const { title, path, viewBox = "0 0 24 24", color, url } = iconList[id];
   const [hover, setHover] = useState<boolean | null>(null);
 
-  const handleOnButtonClicked = () => {
-    onClick && onClick(); // callback
+  const handleOnButtonClicked = useCallback(() => {
+    onClick && onClick();
     let uri = url(
       encodeURIComponent(shareData.link),
       encodeURIComponent(shareData.textToShare),
@@ -16,10 +16,11 @@ export default function Icon({ id, shareData, onClose, onClick, noReferer }: Ico
     );
     window.open(uri, id, windowFeatures + `${noReferer ? " noreferer" : ""}`);
     onClose();
-  };
+  }, [window, id, onClose, onClick, shareData, noReferer, url]);
 
   return (
     <button
+      disabled={typeof window === "undefined" || !window?.navigator?.share}
       onClick={handleOnButtonClicked}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}

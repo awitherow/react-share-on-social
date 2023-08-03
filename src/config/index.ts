@@ -7,8 +7,8 @@ const windowOptions = {
   location: false,
   toolbar: false,
   menubar: false,
-  left: window.screen.width / 2 - 300,
-  top: window.screen.height / 2 - 250,
+  left: window?.screen?.width ?? 500 / 2 - 300,
+  top: window?.screen?.height ?? 500 / 2 - 250,
   height: 500,
   width: 600,
 };

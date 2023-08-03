@@ -1,5 +1,5 @@
 import { ShareOnSocialProps } from "interfaces";
-import React, { cloneElement, useMemo, useState } from "react";
+import React, { cloneElement, useMemo, useState, useCallback } from "react";
 import Backdrop from "./components/Backdrop";
 import { iconList } from "./config";
 import Portal from "./components/Portal";
@@ -28,7 +28,7 @@ const ShareOnSocial = ({
   const shareData = useMemo(
     () => ({
       textToShare: textToShare || "",
-      link: link || (typeof window !== "undefined" && window.location.href) || "",
+      link: link || (typeof window !== "undefined" && window?.location?.href) || "",
       linkTitle: linkTitle || "",
       linkMetaDesc: linkMetaDesc || "",
       linkFavicon: linkFavicon,
@@ -36,10 +36,10 @@ const ShareOnSocial = ({
     [textToShare, link, linkTitle, linkMetaDesc, linkFavicon]
   );
 
-  const handleOnClick = async () => {
-    if (window.navigator.share) {
+  const handleOnClick = useCallback(async () => {
+    if (window?.navigator?.share) {
       try {
-        await window.navigator.share({
+        await window?.navigator?.share({
           url: shareData.link,
           title: shareData.linkTitle,
           text: shareData.textToShare,
@@ -53,7 +53,7 @@ const ShareOnSocial = ({
       setBackdropFadeClass("socialShareBackdropFadeIn");
       onOpen();
     }
-  };
+  }, [window, shareData, onOpen, onSocialClick]);
 
   const handleOnClose = () => {
     setTimeout(onClose, 500);
